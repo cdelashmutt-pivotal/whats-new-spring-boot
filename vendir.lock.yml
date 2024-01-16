@@ -1,0 +1,9 @@
+apiVersion: vendir.k14s.io/v1alpha1
+directories:
+- contents:
+  - git:
+      commitTitle: 'Fixes #24. Adding an example of running a remote script.'
+      sha: a938137035b73105d09347a91f9fd5e9722b617a
+    path: .
+  path: vendir/demo-magic
+kind: LockConfig

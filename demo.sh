@@ -3,13 +3,15 @@
 # Load helper functions and set initial variables
 vendir sync
 . ./vendir/demo-magic/demo-magic.sh
+# Launch with PROMPT_TIMEOUT=0 ./demo.sh to force pauses to never timeout
+PROMPT_TIMEOUT=5
+
 export TYPE_SPEED=100
 export DEMO_PROMPT="${GREEN}➜ ${CYAN}\W ${COLOR_RESET}"
 SCRIPTPATH="$( cd -- "$(dirname "$0")" >/dev/null 2>&1 ; pwd -P )"
 PROJECT_NAME="project-example"
 TEMP_DIR="$SCRIPTPATH/$PROJECT_NAME"
-# Set to 0 to require manual advancing
-PROMPT_TIMEOUT=5
+BASE_URL="http://localhost:8080"
 
 # Function to pause and clear the screen
 function talkingPoint() {
@@ -81,7 +83,9 @@ function startSpringBootClean {
 
 function testCustomerRepo {
   displayMessage "Testing Customer Repo"
-  pei "http http://localhost:8080/customers"
+  url="$BASE_URL/customers"
+  pei "http $url"
+  echo "Test in browser at $url"
 }
 
 function addGraphQL {
@@ -91,7 +95,8 @@ function addGraphQL {
 
 function testGraphQL {
   displayMessage "Test GraphQL query"
-  pei "http http://localhost:8080/graphql operationName=MyQuery 'query=query MyQuery { customersByName(name:\"josh\") { id , name } }'"
+  pei "http $BASE_URL/graphql operationName=MyQuery 'query=query MyQuery { customersByName(name:\"josh\") { id , name } }'"
+  echo "Test in browser at $BASE_URL/graphiql"
 }
 
 function springBootStop {
@@ -111,7 +116,8 @@ function addActivity {
 
 function testActivity {
   displayMessage "Test GraphQL query"
-  pei "http http://localhost:8080/graphql operationName=MyQuery 'query=query MyQuery { customersByName(name:\"josh\") { id , name , suggestedActivity { activity, participants } } }'"
+  pei "http $BASE_URL/graphql operationName=MyQuery 'query=query MyQuery { customersByName(name:\"josh\") { id , name , suggestedActivity { activity, participants } } }'"
+  echo "Test in browser at $BASE_URL/graphiql"
 }
 
 function addActuators {
@@ -121,7 +127,13 @@ function addActuators {
 
 function testActuators {
   displayMessage "Test Actuators"
+  url="$BASE_URL/actuator/health"
   pei "http http://localhost:8080/actuator/health"
+  echo "View Actuators in browser at $url"
+  echo ""
+  echo "View Grafana at http:///ocalhost:3000/d/spring_boot/spring-boot-statistics/"
+  echo ""
+  echo "View Zipkin at http://localhost:9411/zipkin/"
 }
 
 # Main Flow
